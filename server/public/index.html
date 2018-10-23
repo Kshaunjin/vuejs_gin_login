@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Login System</title>
+    <!-- JQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.7.0/vue-resource.min.js"></script>
+</head>
+<body>
+	<h1>Login page</h1>
+	<div id="app">
+		<!--{{ .message }}-->
+	</div>
+	<form action="/ans" method="post" enctype="multipart/form-data">
+    	Name: <input type="text" name="name"><br>
+    	Password: <input type="text" name="password"><br>
+    	<!--Files: <input type="file" name="file"><br><br>-->
+    	<input type="submit" value="Submit">
+	</form>
+</body>
+</html>
+
+<script>
+var app = new Vue({
+  el: '#app',
+  data: {
+    message: 'Hello Vue!'
+  }
+})
+</script>
