@@ -87,7 +87,7 @@ func main() {
 		claims["exp"] = time.Now().Add(time.Hour * time.Duration(1)).Unix()
 		claims["iat"] = time.Now().Unix()
 		token.Claims = claims
-		expireCookie := time.Now().Add(time.Hour * 1)
+		//expireCookie := time.Now().Add(time.Hour * 1)
 
 		if err != nil {
 			//w.WriteHeader(http.StatusInternalServerError)
@@ -104,11 +104,11 @@ func main() {
 
 		//response := Token{tokenString}
 
-		cookie := http.Cookie{Name: "Auth", Value: tokenString, Expires: expireCookie, HttpOnly: true}
-		http.SetCookie(c.Writer, &cookie)
+		//cookie := http.Cookie{Name: "Auth", Value: tokenString, Expires: expireCookie, HttpOnly: true}
+		//http.SetCookie(c.Writer, &cookie)
 		//res, err := json.Marshal(response)
 		c.JSON(200, gin.H{
-			"token":    cookie,
+			"token":    tokenString,
 			"password": password,
 		})
 
@@ -122,7 +122,7 @@ func main() {
 
 	})
 	sec := router.Group("/api")
-	sec.Use(MyMiddelware())
+	sec.Use()
 	{
 		sec.GET("/info", func(c *gin.Context) {
 			//c.String(http.StatusOK, "infos")
