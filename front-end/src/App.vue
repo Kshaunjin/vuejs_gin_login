@@ -12,11 +12,7 @@ export default {
   name: 'App',
   data () {
     return {
-      authenticated: false,
-      mockAccount: {
-        username: 'nraboy',
-        password: 'password'
-      }
+      authenticated: false
     }
   },
   mounted () {

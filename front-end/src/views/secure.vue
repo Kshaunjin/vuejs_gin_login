@@ -26,10 +26,16 @@ export default {
       let self = this
       axios({
         methods: 'get',
-        url: 'http://localhost:8000/api/info'
+        url: 'http://localhost:8000/api/info',
+        headers: {
+          Authorization: this.$cookies.get('token')
+        }
       })
         .then((resp) => {
           self.datas = resp.data
+        })
+        .catch(error => {
+          console.log(error.response)
         })
     }
   }

@@ -1,11 +1,9 @@
 package main
 
 import (
-	//"encoding/json"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-contrib/cors"
-	//"github.com/dgrijalva/jwt-go/request"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -17,6 +15,11 @@ import (
 type Account struct {
 	Name     string
 	Password string
+}
+
+type Claims struct {
+	Email string `json:"email"`
+	jwt.StandardClaims
 }
 
 func fatal(err error) {
@@ -40,11 +43,16 @@ const (
 
 func main() {
 	router := gin.Default()
-	router.Use(cors.Default())
+	router.Use(cors.New(cors.Config{
+		AllowAllOrigins: true,
+		AllowMethods:    []string{"PUT", "PATCH", "GET", "POST", "DELETE", "OPTIONS"},
+		//Default no Authorization,need to be defined
+		AllowHeaders:     []string{"Origin", "content-type", "application/json", "Authorization"},
+		ExposeHeaders:    []string{"X-Total-Count", "Content-Length", "Authorization"},
+		AllowCredentials: true,
+	}))
 	// Set a lower memory limit for multipart forms (default is 32 MiB)
 	router.MaxMultipartMemory = 8 << 20 // 8 MiB
-	//router.Static("/", "./public")
-
 	session, err := mgo.Dial(URL)
 	if err != nil {
 		panic(err)
@@ -54,23 +62,13 @@ func main() {
 	session.SetMode(mgo.Monotonic, true)
 	con := session.DB("accounts").C("testdata")
 
-	//讀取html資料夾
-	router.LoadHTMLGlob("public/*")
-
-	//讀取文件
-	router.GET("/upload", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{})
-	})
-
 	router.POST("/ans", func(c *gin.Context) {
 		var form Account
 		name := c.PostForm("name")
 		password := c.PostForm("password")
-		//c.String(http.StatusOK, fmt.Sprintf("Login success, name=%s and password=%s.", name, password))
 
 		result := Account{}
-		jin := "jin"
-		err = con.Find(bson.M{"name": jin}).One(&result)
+		err = con.Find(bson.M{"name": name}).One(&result)
 
 		if err := c.ShouldBind(&form); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -102,30 +100,17 @@ func main() {
 			fatal(err)
 		}
 
-		//response := Token{tokenString}
-
-		//cookie := http.Cookie{Name: "Auth", Value: tokenString, Expires: expireCookie, HttpOnly: true}
-		//http.SetCookie(c.Writer, &cookie)
-		//res, err := json.Marshal(response)
 		c.JSON(200, gin.H{
 			"token":    tokenString,
 			"password": password,
 		})
 
-		/*
-			c.HTML(http.StatusOK, "ans.html", gin.H{
-				"response": response,
-				"res":      res,
-				"err":      err,
-			})
-		*/
-
 	})
 	sec := router.Group("/api")
-	sec.Use()
+	sec.Use(MyMiddelware())
 	{
 		sec.GET("/info", func(c *gin.Context) {
-			//c.String(http.StatusOK, "infos")
+			//Secret message
 			datas := []int{1, 2, 3, 4, 5}
 			test := []int{6, 7, 8, 9, 10}
 			c.JSON(200, gin.H{
@@ -140,20 +125,12 @@ func main() {
 
 func MyMiddelware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		cookie, err := c.Request.Cookie("Auth")
-		value := cookie.Value
-		token, err := jwt.Parse(value, func(token *jwt.Token) (interface{}, error) {
+		tokens := c.Request.Header.Get("Authorization")
+		token, err := jwt.ParseWithClaims(tokens, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 			// since we only use the one private key to sign the tokens,
 			// we also only use its public counter part to verify
 			return []byte(SecretKey), nil
 		})
-		/*
-			token, err := request.ParseFromRequest(c.Request, request.AuthorizationHeaderExtractor,
-				func(token *jwt.Token) (interface{}, error) {
-					return []byte(SecretKey), nil
-				})
-
-		*/
 		if err == nil {
 			if token.Valid {
 				c.Next()

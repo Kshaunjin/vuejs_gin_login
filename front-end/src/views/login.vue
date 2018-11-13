@@ -41,7 +41,7 @@ export default {
         .then((resp) => {
           this.passwd = resp.data.password
           this.token = resp.data.token
-          this.$cookies.set('Auth', this.token, '1h')
+          this.$cookies.set('token', this.token, '1h')
           if (resp != null) {
             this.$router.push('/secure')
           }
