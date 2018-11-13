@@ -5,6 +5,8 @@
 #### 使用 VueJS 之插件
     1. axios
     2. qs
+    3. vue-cookies
+    4. vue-router
     
 #### 使用 Golang 之插件
     1. gin
