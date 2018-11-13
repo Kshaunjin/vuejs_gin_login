@@ -1,6 +1,6 @@
 # vuejs_gin_login
 使用 `Vuejs` 與 `Golang` 建立的登入系統  
-實現 `前後端分離` `跨網域存取` `Json Token Web`  
+實現 `前後端分離` `跨網域存取` `Json  Web Token`  
 
 #### 使用 VueJS 之插件
     1. axios
