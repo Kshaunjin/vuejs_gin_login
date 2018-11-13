@@ -4,9 +4,10 @@
 #### 使用VueJS之插件
     axios
     qs
-    
+#### 使用Golang之插件
 
-## jwt_gin
+## 原系統架構（純後端）
 ![image](https://github.com/KS-Jin/vuejs_gin_login/blob/master/img/jwt_gin.jpg)
-## vue_gin
+
+## 現系統架構（）
 ![image](https://github.com/KS-Jin/vuejs_gin_login/blob/master/img/vue_gin.jpg)   
