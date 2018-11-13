@@ -9,5 +9,5 @@
 ## 原系統架構（純後端）
 ![image](https://github.com/KS-Jin/vuejs_gin_login/blob/master/img/jwt_gin.jpg)
 
-## 現系統架構（）
+## 現系統架構（前後分離）
 ![image](https://github.com/KS-Jin/vuejs_gin_login/blob/master/img/vue_gin.jpg)   
